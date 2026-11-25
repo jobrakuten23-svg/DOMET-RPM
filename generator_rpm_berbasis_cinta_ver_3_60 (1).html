@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Generator RPM Berbasis Cinta Ver. 3.60 — Otomatis & Cerdas</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Plus Jakarta Sans', 'sans-serif'],
+          },
+          colors: {
+            emerald: {
+              50: '#ecfdf5',
+              100: '#d1fae5',
+              200: '#a7f3d0',
+              300: '#6ee7b7',
+              400: '#34d399',
+              500: '#10b981',
+              600: '#059669',
+              700: '#047857',
+              800: '#065f46',
+              900: '#064e3b',
+              950: '#022c22',
+            },
+            amber: {
+              50: '#fffbeb',
+              100: '#fef3c7',
+              200: '#fde68a',
+              300: '#fcd34d',
+              400: '#fbbf24',
+              500: '#f59e0b',
+              600: '#d97706',
+              700: '#b45309',
+            }
+          },
+        },
+      },
+    };
+  </script>
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f4f7f6;
+    }
+    h1, h2, h3, .font-display {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    /* Gaya Editable Document */
+    [contenteditable="true"]:hover {
+      outline: 1.5px dashed #10b981;
+      background-color: #f0fdf4;
+      border-radius: 4px;
+    }
+    [contenteditable="true"]:focus {
+      outline: 2px solid #059669;
+      background-color: #ffffff;
+      border-radius: 4px;
+      padding: 2px 4px;
+    }
+
+    /* Tabel Dokumen RPM */
+    .rpm-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 1rem;
+      font-size: 0.875rem;
+    }
+    .rpm-table th, .rpm-table td {
+      border: 1px solid #cbd5e1;
+      padding: 8px 12px;
+      vertical-align: top;
+      text-align: left;
+    }
+    .rpm-table th {
+      background-color: #ecfdf5;
+      color: #064e3b;
+      font-weight: 700;
+    }
+
+    /* Animasi Halus */
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-slide {
+      animation: fadeSlide 0.3s ease-out;
+    }
+
+    /* Pengaturan Cetak PDF Bersih */
+    @media print {
+      body {
+        background: white !important;
+        color: black !important;
+      }
+      .no-print {
+        display: none !important;
+      }
+      #main-workspace {
+        display: block !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        max-width: 100% !important;
+      }
+      #preview-column {
+        width: 100% !important;
+        max-width: 100% !important;
+      }
+      #rpm-document-paper {
+        box-shadow: none !important;
+        border: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+      [contenteditable="true"] {
+        outline: none !important;
+        background: transparent !important;
+      }
+      .rpm-table th {
+        background-color: #f1f5f9 !important;
+        color: #000 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      .page-break-inside-avoid {
+        break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body class="text-slate-800 antialiased selection:bg-emerald-100 selection:text-emerald-900">
+
+  <!-- Toast Notification -->
+  <div id="toast-container" class="fixed top-4 right-4 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none px-4 sm:px-0 no-print"></div>
+
+  <!-- Header Utama -->
+  <header class="bg-gradient-to-r from-emerald-900 via-emerald-800 to-teal-900 text-white shadow-md sticky top-0 z-30 no-print border-b border-amber-400/30">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-amber-300 to-amber-500 text-emerald-950 flex items-center justify-center shadow-lg shadow-amber-500/20">
+          <i class="fa-solid fa-heart-pulse text-xl"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-base sm:text-lg font-extrabold tracking-tight text-white">RPM Berbasis Cinta</h1>
+            <span class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-amber-400/20 text-amber-300 border border-amber-400/40">
+              Ver. 3.60 Otomatis
+            </span>
+          </div>
+          <p class="text-xs text-emerald-200 hidden sm:block">Generator Rencana Pembelajaran Mendalam (Deep Learning & Kurikulum Berbasis Cinta)</p>
+        </div>
+      </div>
+
+      <!-- Tombol Aksi Dokumen di Header -->
+      <div class="flex items-center gap-2">
+        <button onclick="openBankModal()" class="inline-flex items-center gap-1.5 px-3 py-2 text-xs sm:text-sm font-semibold bg-emerald-700/80 hover:bg-emerald-600 text-emerald-50 border border-emerald-500/40 rounded-xl transition cursor-pointer">
+          <i class="fa-solid fa-book-open-reader text-amber-300"></i>
+          <span>Bank Topik (24+)</span>
+        </button>
+        <button onclick="exportToWord()" class="inline-flex items-center gap-1.5 px-3 py-2 text-xs sm:text-sm font-semibold bg-white/10 hover:bg-white/20 text-white rounded-xl transition cursor-pointer" title="Unduh format Microsoft Word (.doc)">
+          <i class="fa-solid fa-file-word text-sky-300"></i>
+          <span class="hidden md:inline">Unduh .DOC</span>
+        </button>
+        <button onclick="window.print()" class="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs sm:text-sm font-bold bg-amber-400 hover:bg-amber-300 text-emerald-950 rounded-xl shadow-sm transition cursor-pointer">
+          <i class="fa-solid fa-print"></i>
+          <span>Cetak / PDF</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Workspace Utama: Panel Input Kiri & Preview Dokumen Kanan -->
+  <div id="main-workspace" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+    <!-- ========================================================= -->
+    <!-- KOLOM KIRI: FORM CERDAS & PENCARIAN OTOMATIS              -->
+    <!-- ========================================================= -->
+    <aside class="lg:col-span-4 space-y-5 no-print">
+
+      <!-- Kartu Pencarian Topik Cepat (Smart Auto-Search) -->
+      <div class="bg-white rounded-2xl border border-emerald-200 shadow-sm p-5">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="w-7 h-7 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center text-xs">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+          </span>
+          <h2 class="text-sm font-bold text-slate-900">Pencarian Topik Otomatis</h2>
+        </div>
+        <p class="text-xs text-slate-500 mb-3">Ketik kata kunci materi (misal: <em>sholat, fotosintesis, pecahan, puisi, ekosistem, zakat</em>) untuk mengisi seluruh RPM secara instan.</p>
+
+        <div class="relative">
+          <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-emerald-600">
+            <i class="fa-solid fa-magnifying-glass text-xs"></i>
+          </span>
+          <input
+            type="text"
+            id="smart-search-input"
+            oninput="handleSmartSearch(this.value)"
+            placeholder="Cari materi atau mata pelajaran..."
+            class="w-full pl-9 pr-8 py-2.5 text-sm bg-emerald-50/50 border border-emerald-300 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-600"
+          />
+          <button onclick="clearSmartSearch()" id="clear-search-btn" class="hidden absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 cursor-pointer">
+            <i class="fa-solid fa-circle-xmark text-xs"></i>
+          </button>
+        </div>
+
+        <!-- Hasil Pencarian Instan -->
+        <div id="smart-search-results" class="mt-2.5 space-y-1.5 max-h-56 overflow-y-auto"></div>
+      </div>
+
+      <!-- Form Konfigurasi RPM -->
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 space-y-4">
+        <div class="border-b border-slate-100 pb-3">
+          <h2 class="text-sm font-bold text-slate-900">Identitas & Parameter Modul</h2>
+          <p class="text-xs text-slate-500">Isi manual atau pilih dari pencarian di atas, lalu klik Generate.</p>
+        </div>
+
+        <form id="rpm-generator-form" onsubmit="generateRPM(event)" class="space-y-3.5">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Satuan Pendidikan / Madrasah</label>
+            <input type="text" id="input-school" value="MTs Negeri / Madrasah Terpadu" required class="w-full px-3.5 py-2 text-sm bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-600" />
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1">Nama Penyusun / Guru</label>
+              <input type="text" id="input-teacher" value="Ahmad Fauzi, S.Pd.I" required class="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-600" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1">Alokasi Waktu</label>
+              <input type="text" id="input-duration" value="2 Pertemuan (4 x 40 Menit)" required class="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-600" />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1">Jenjang & Fase</label>
+              <select id="input-fase" class="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-600">
+                <option value="MI / SD - Fase A">MI / SD - Fase A</option>
+                <option value="MI / SD - Fase B">MI / SD - Fase B</option>
+                <option value="MI / SD - Fase C">MI / SD - Fase C</option>
+                <option value="MTs / SMP - Fase D" selected>MTs / SMP - Fase D</option>
+                <option value="MA / SMA - Fase E">MA / SMA - Fase E</option>
+                <option value="MA / SMA - Fase F">MA / SMA - Fase F</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1">Kelas / Semester</label>
+              <input type="text" id="input-class" value="Kelas VII / Ganjil" required class="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-600" />
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Mata Pelajaran</label>
+            <input type="text" id="input-subject" list="subject-suggestions" value="Akidah Akhlak" required class="w-full px-3.5 py-2 text-sm bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-600" />
+            <datalist id="subject-suggestions">
+              <option value="Akidah Akhlak">
+              <option value="Fiqih">
+              <option value="Al-Qur'an Hadis">
+              <option value="Sejarah Kebudayaan Islam (SKI)">
+              <option value="Pendidikan Agama Islam (PAI)">
+              <option value="Ilmu Pengetahuan Alam (IPA)">
+              <option value="Matematika">
+              <option value="Bahasa Indonesia">
+              <option value="Ilmu Pengetahuan Sosial (IPS)">
+              <option value="Pendidikan Pancasila">
+              <option value="PJOK">
+              <option value="Seni Budaya">
+              <option value="Informatika">
+            </datalist>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Topik / Materi Pokok <span class="text-rose-500">*</span></label>
+            <input type="text" id="input-topic" value="Adab kepada Orang Tua dan Guru sebagai Wujud Kasih Sayang" required placeholder="Ketik topik apa saja..." class="w-full px-3.5 py-2 text-sm font-semibold bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-600" />
+          </div>
+
+          <!-- Pilihan Fokus Panca Cinta -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1.5">Fokus Panca Cinta (KBC)</label>
+            <div class="space-y-1.5 text-xs bg-emerald-50/60 p-3 rounded-xl border border-emerald-100">
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" name="panca-cinta" value="Cinta kepada Allah dan Rasul-Nya" checked class="rounded text-emerald-600 focus:ring-emerald-500" />
+                <span>Cinta kepada Allah & Rasul-Nya</span>
+              </label>
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" name="panca-cinta" value="Cinta Ilmu" checked class="rounded text-emerald-600 focus:ring-emerald-500" />
+                <span>Cinta Ilmu & Rasa Ingin Tahu</span>
+              </label>
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" name="panca-cinta" value="Cinta Diri dan Sesama Manusia" checked class="rounded text-emerald-600 focus:ring-emerald-500" />
+                <span>Cinta Diri & Sesama Manusia</span>
+              </label>
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" name="panca-cinta" value="Cinta Lingkungan" class="rounded text-emerald-600 focus:ring-emerald-500" />
+                <span>Cinta Lingkungan (Ekoteologi)</span>
+              </label>
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" name="panca-cinta" value="Cinta Tanah Air" class="rounded text-emerald-600 focus:ring-emerald-500" />
+                <span>Cinta Tanah Air & Kebangsaan</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Pilihan Dimensi Profil Lulusan -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1.5">Dimensi Profil Lulusan (8 Dimensi)</label>
+            <div class="grid grid-cols-2 gap-1.5 text-[11px] bg-slate-50 p-3 rounded-xl border border-slate-200">
+              <label class="flex items-center gap-1.5 cursor-pointer">
+                <input type="checkbox" name="profil-lulusan" value="Keimanan & Ketakwaan" checked class="rounded text-emerald-600" />
+                <span>Keimanan & Takwa</span>
+              </label>
+              <label class="flex items-center gap-1.5 cursor-pointer">
+                <input type="checkbox" name="profil-lulusan" value="Kewargaan" class="rounded text-emerald-600" />
+                <span>Kewargaan</span>
+              </label>
+              <label class="flex items-center gap-1.5 cursor-pointer">
+                <input type="checkbox" name="profil-lulusan" value="Penalaran Kritis" checked class="rounded text-emerald-600" />
+                <span>Penalaran Kritis</span>
+              </label>
+              <label class="flex items-center gap-1.5 cursor-pointer">
+                <input type="checkbox" name="profil-lulusan" value="Kreativitas" class="rounded text-emerald-600" />
+                <span>Kreativitas</span>
+              </label>
+              <label class="flex items-center gap-1.5 cursor-pointer">
+                <input type="checkbox" name="profil-lulusan" value="Kolaborasi" checked class="rounded text-emerald-600" />
+                <span>Kolaborasi</span>
+              </label>
+              <label class="flex items-center gap-1.5 cursor-pointer">
+                <input type="checkbox" name="profil-lulusan" value="Kemandirian" class="rounded text-emerald-600" />
+                <span>Kemandirian</span>
+              </label>
+              <label class="flex items-center gap-1.5 cursor-pointer">
+                <input type="checkbox" name="profil-lulusan" value="Kesehatan" class="rounded text-emerald-600" />
+                <span>Kesehatan</span>
+              </label>
+              <label class="flex items-center gap-1.5 cursor-pointer">
+                <input type="checkbox" name="profil-lulusan" value="Komunikasi" checked class="rounded text-emerald-600" />
+                <span>Komunikasi</span>
+              </label>
+            </div>
+          </div>
+
+          <button type="submit" class="w-full py-3 px-4 bg-gradient-to-r from-emerald-700 to-teal-700 hover:from-emerald-800 hover:to-teal-800 text-white font-bold text-sm rounded-xl shadow-md shadow-emerald-700/20 transition flex items-center justify-center gap-2 cursor-pointer">
+            <i class="fa-solid fa-sparkles text-amber-300"></i>
+            <span>Generate RPM Otomatis</span>
+          </button>
+        </form>
+      </div>
+    </aside>
+
+    <!-- ========================================================= -->
+    <!-- KOLOM KANAN: DOKUMEN RPM HASIL GENERATE (DAPAT DIEDIT)    -->
+    <!-- ========================================================= -->
+    <main id="preview-column" class="lg:col-span-8 space-y-4">
+
+      <!-- Toolbar Atas Dokumen -->
+      <div class="bg-white rounded-2xl border border-slate-200 px-4 py-3 flex flex-wrap items-center justify-between gap-2 shadow-sm no-print">
+        <div class="flex items-center gap-2 text-xs text-slate-600">
+          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-700 font-semibold">
+            <i class="fa-solid fa-pen-to-square"></i> Mode Edit Langsung Aktif
+          </span>
+          <span class="hidden sm:inline">Klik teks mana pun pada lembar di bawah untuk menyunting.</span>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button onclick="copyDocumentText()" class="px-3 py-1.5 text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg transition flex items-center gap-1.5 cursor-pointer">
+            <i class="fa-regular fa-copy"></i> Salin Teks
+          </button>
+          <button onclick="exportToWord()" class="px-3 py-1.5 text-xs font-semibold bg-sky-50 hover:bg-sky-100 text-sky-700 border border-sky-200 rounded-lg transition flex items-center gap-1.5 cursor-pointer">
+            <i class="fa-solid fa-file-word"></i> Simpan Word
+          </button>
+        </div>
+      </div>
+
+      <!-- Lembar Kertas A4 Dokumen RPM -->
+      <article id="rpm-document-paper" class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-10 text-slate-800 leading-relaxed animate-fade-slide">
+        <!-- Konten RPM diisi otomatis oleh JavaScript -->
+      </article>
+    </main>
+
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- MODAL BANK TOPIK / PUSTAKA MATERI LINTAS MAPEL            -->
+  <!-- ========================================================= -->
+  <div id="bank-modal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 no-print">
+    <div class="bg-white rounded-2xl max-w-3xl w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden">
+      <div class="px-6 py-4 bg-emerald-900 text-white flex items-center justify-between">
+        <div>
+          <h3 class="text-base font-bold">Bank Topik RPM Berbasis Cinta (Siap Pakai)</h3>
+          <p class="text-xs text-emerald-200">Pilih salah satu topik untuk mengisi form & menghasilkan dokumen lengkap secara instan.</p>
+        </div>
+        <button onclick="closeBankModal()" class="w-8 h-8 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center text-white cursor-pointer">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Filter Kategori Mapel di Modal -->
+      <div class="p-4 bg-slate-50 border-b border-slate-200 flex flex-col sm:flex-row gap-3">
+        <input type="text" id="modal-bank-search" oninput="renderBankModalList()" placeholder="Filter judul materi atau mata pelajaran..." class="flex-1 px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-600" />
+        <select id="modal-bank-category" onchange="renderBankModalList()" class="px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-600">
+          <option value="Semua">Semua Mata Pelajaran</option>
+          <option value="PAI & Madrasah">PAI & Madrasah (Akidah, Fiqih, Qurdis, SKI)</option>
+          <option value="Sains & Matematika">Sains & Matematika (IPA, Matematika, Informatika)</option>
+          <option value="Bahasa & Sosial">Bahasa & Sosial (B. Indonesia, IPS, Pancasila)</option>
+          <option value="Seni & PJOK">Seni Budaya & PJOK</option>
+        </select>
+      </div>
+
+      <!-- Daftar Kartu Topik -->
+      <div id="bank-modal-list" class="p-5 overflow-y-auto grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <!-- Diisi via JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- JAVASCRIPT ENGINE: KNOWLEDGE BASE & SMART GENERATOR       -->
+  <!-- ========================================================= -->
+  <script>
+    // Basis Pengetahuan Materi (Knowledge Base) untuk Pencarian & Auto-Fill Cerdas
+    const TOPIC_DATABASE = [
+      {
+        id: 'akidah-adab-ortu',
+        category: 'PAI & Madrasah',
+        fase: 'MTs / SMP - Fase D',
+        kelas: 'Kelas VII / Ganjil',
+        subject: 'Akidah Akhlak',
+        topic: 'Adab kepada Orang Tua dan Guru sebagai Wujud Kasih Sayang',
+        keywords: ['adab', 'orang tua', 'guru', 'birrul walidain', 'akhlak', 'kasih sayang'],
+        dalil: 'QS. Al-Isra ayat 23–24 tentang perintah berbuat baik kepada ibu-bapak dengan penuh kasih sayang serta larangan berkata "ah" dan membentak keduanya.',
+        pancaCinta: ['Cinta kepada Allah dan Rasul-Nya', 'Cinta Diri dan Sesama Manusia'],
+        profil: ['Keimanan & Ketakwaan', 'Penalaran Kritis', 'Kolaborasi', 'Komunikasi'],
+        kesiapan: 'Peserta didik berada pada fase remaja awal yang membutuhkan keteladanan, validasi emosi, dan pendekatan dialogis agar nilai akhlak terinternalisasi secara sadar.',
+        karakteristik: 'Materi bersifat afektif dan aplikatif, menekankan pembiasaan tutur kata santun, empati, dan penghormatan dalam interaksi harian di rumah maupun madrasah.',
+        tp: 'Peserta didik mampu menganalisis makna serta membiasakan adab berbakti kepada orang tua dan memuliakan guru dengan penuh kesadaran, empati, dan kasih sayang.',
+        iktp: [
+          'Menjelaskan dalil dan keutamaan berbakti kepada orang tua serta memuliakan guru.',
+          'Mengidentifikasi contoh perilaku santun dan penuh empati di era komunikasi digital.',
+          'Mempraktikkan simulasi komunikasi penuh kasih sayang (roleplay) bersama teman.',
+          'Menyusun karya "Surat Cinta & Komitmen Bakti" untuk orang tua atau guru.'
+        ],
+        model: 'Project-Based Learning (PjBL) & Reflective Learning',
+        kemitraan: 'Melibatkan orang tua di rumah untuk memberikan umpan balik tertulis pada surat bakti siswa.',
+        lingkungan: 'Ruang kelas yang hangat, inklusif, bebas perundungan, dengan pengaturan duduk melingkar saat refleksi.',
+        digital: 'Tayangan video inspiratif singkat dan pembuatan kartu ucapan digital/kertas hias.',
+        intiMemahami: 'Peserta didik menyimak video pendek tentang pengorbanan orang tua dan guru, kemudian mendiskusikan makna QS. Al-Isra: 23–24 secara berkelompok dengan penuh ketakziman.',
+        intiMengaplikasi: 'Peserta didik menyusun dan menampilkan simulasi (roleplay) perbandingan cara merespons nasihat orang tua/guru dengan penuh cinta vs sikap tergesa-gesa, lalu merancang "Surat Cinta & Bakti".',
+        intiMerefleksi: 'Peserta didik melakukan hening sejenak (mindfulness), menuliskan perenungan hati pada sticky note, dan merumuskan 3 komitmen kebaikan selama satu pekan ke depan.',
+        lkpdTugas: 'Analisislah 2 situasi nyata dalam kehidupan remaja (misal: saat orang tua meminta bantuan ketika kamu sedang belajar/bermain gawai). Tuliskan respons terbaik yang mencerminkan kelembutan hati, lalu tulislah sepucuk Surat Cinta & Terima Kasih untuk ayah/ibu atau gurumu!'
+      },
+      {
+        id: 'fiqih-zakat',
+        category: 'PAI & Madrasah',
+        fase: 'MTs / SMP - Fase D',
+        kelas: 'Kelas VIII / Genap',
+        subject: 'Fiqih',
+        topic: 'Zakat Fitrah dan Zakat Mal sebagai Instrumen Cinta Sosial',
+        keywords: ['zakat', 'fitrah', 'mal', 'sedekah', 'infak', 'mustahik', 'fiqih', 'sosial'],
+        dalil: 'QS. At-Taubah ayat 103 tentang perintah mengambil zakat untuk membersihkan dan menyucikan jiwa serta menumbuhkan ketenteraman bagi sesama.',
+        pancaCinta: ['Cinta kepada Allah dan Rasul-Nya', 'Cinta Diri dan Sesama Manusia'],
+        profil: ['Keimanan & Ketakwaan', 'Kewargaan', 'Penalaran Kritis', 'Kolaborasi'],
+        kesiapan: 'Peserta didik telah mengenal rukun Islam dan memiliki pengalaman melihat pembagian zakat fitrah di lingkungan masjid sekitar.',
+        karakteristik: 'Materi memadukan pemahaman hukum syariat (ketentuan nisab, haul, mustahik) dengan kepekaan empati terhadap kesejahteraan fakir miskin.',
+        tp: 'Peserta didik mampu menganalisis ketentuan zakat fitrah dan zakat mal serta menumbuhkan kepedulian sosial untuk berbagi kebahagiaan kepada sesama.',
+        iktp: [
+          'Membedakan syarat, rukun, dan kadar zakat fitrah serta zakat mal.',
+          'Menghitung simulasi besaran zakat fitrah dan zakat mal secara tepat.',
+          'Mengidentifikasi 8 golongan penerima zakat (mustahik) di lingkungan sekitar.',
+          'Merancang kampanye poster digital "Zakat Membersihkan Harta, Menguatkan Cinta Sesama".'
+        ],
+        model: 'Problem-Based Learning (PBL) & Simulasi Amil Zakat',
+        kemitraan: 'Kolaborasi dengan Unit Pengumpul Zakat (UPZ) madrasah atau takmir masjid setempat.',
+        lingkungan: 'Suasana belajar kolaboratif yang menumbuhkan empati sosial dan semangat gotong royong.',
+        digital: 'Kalkulator zakat digital dan aplikasi desain poster sederhana.',
+        intiMemahami: 'Peserta didik mengkaji QS. At-Taubah: 103 dan memetakan konsep ketentuan zakat fitrah, zakat mal, serta hikmah pembersihan jiwa dari sifat kikir.',
+        intiMengaplikasi: 'Dalam kelompok kecil, siswa berperan sebagai "Panitia Amil Muda" yang menghitung studi kasus zakat keluarga dan menyusun prioritas penyaluran kepada mustahik.',
+        intiMerefleksi: 'Peserta didik merefleksikan makna syukur atas nikmat rezeki dan menuliskan rencana aksi sedekah harian sebagai latihan kepedulian.',
+        lkpdTugas: 'Hitunglah kewajiban zakat fitrah untuk keluarga Pak Ahmad yang terdiri dari 5 anggota jiwa (jika harga beras Rp15.000/kg), serta jelaskan bagaimana zakat dapat menghadirkan rasa cinta dan persaudaraan di tengah masyarakat!'
+      },
+      {
+        id: 'ipa-ekosistem',
+        category: 'Sains & Matematika',
+        fase: 'MTs / SMP - Fase D',
+        kelas: 'Kelas VII / Genap',
+        subject: 'Ilmu Pengetahuan Alam (IPA)',
+        topic: 'Interaksi Makhluk Hidup dan Ekosistem: Wujud Cinta Lingkungan',
+        keywords: ['ipa', 'ekosistem', 'lingkungan', 'rantai makanan', 'ekologi', 'alam', 'sampah'],
+        dalil: 'QS. Ar-Rum ayat 41 tentang larangan berbuat kerusakan di darat dan di laut serta tugas manusia sebagai khalifah penjaga keseimbangan alam.',
+        pancaCinta: ['Cinta kepada Allah dan Rasul-Nya', 'Cinta Ilmu', 'Cinta Lingkungan'],
+        profil: ['Keimanan & Ketakwaan', 'Penalaran Kritis', 'Kreativitas', 'Kolaborasi'],
+        kesiapan: 'Peserta didik akrab dengan flora dan fauna di halaman madrasah dan memiliki rasa ingin tahu tinggi melalui pengamatan langsung.',
+        karakteristik: 'Materi bersifat kontekstual dan observasional, menghubungkan konsep jaring-jaring makanan dengan tanggung jawab menjaga kelestarian bumi.',
+        tp: 'Peserta didik mampu menganalisis interaksi komponen biotik dan abiotik dalam ekosistem serta merancang aksi nyata pelestarian lingkungan sebagai wujud cinta alam.',
+        iktp: [
+          'Mengidentifikasi komponen biotik dan abiotik di lingkungan sekitar madrasah.',
+          'Menyusun bagan rantai makanan dan jaring-jaring makanan secara akurat.',
+          'Menganalisis dampak pencemaran atau hilangnya satu spesies terhadap keseimbangan ekosistem.',
+          'Membuat proyek aksi nyata "Adopsi Tanaman / Zero Waste Class".'
+        ],
+        model: 'Outdoor Inquiry Learning & Project-Based Learning',
+        kemitraan: 'Tim Adiwiyata madrasah dan petugas kebersihan lingkungan sekolah.',
+        lingkungan: 'Taman madrasah sebagai laboratorium alam terbuka yang menyenangkan.',
+        digital: 'Kamera ponsel untuk dokumentasi spesimen dan lembar observasi digital.',
+        intiMemahami: 'Peserta didik melakukan eksplorasi langsung di taman madrasah selama 15 menit untuk mengamati dan mencatat interaksi antar makhluk hidup dengan penuh rasa takjub atas ciptaan Tuhan.',
+        intiMengaplikasi: 'Peserta didik menyusun diagram jaring-jaring makanan dari hasil observasi taman, lalu mendiskusikan solusi ketika terjadi penumpukan sampah plastik di ekosistem tersebut.',
+        intiMerefleksi: 'Peserta didik menuliskan surat janji cinta bumi ("Ikrar Sahabat Alam") dan berkomitmen mengurangi plastik sekali pakai.',
+        lkpdTugas: 'Amati 1 area di halaman sekolahmu! Catat minimal 5 komponen biotik dan 3 komponen abiotik, gambarkan rantai makanan yang terbentuk, dan jelaskan dampak yang terjadi jika salah satu komponen musnah!'
+      },
+      {
+        id: 'ipa-fotosintesis',
+        category: 'Sains & Matematika',
+        fase: 'MI / SD - Fase B',
+        kelas: 'Kelas IV / Ganjil',
+        subject: 'Ilmu Pengetahuan Alam dan Sosial (IPAS)',
+        topic: 'Proses Fotosintesis: Keajaiban Tumbuhan Pemberi Kehidupan',
+        keywords: ['fotosintesis', 'tumbuhan', 'daun', 'oksigen', 'matahari', 'ipas', 'ipa'],
+        dalil: 'QS. Al-An’am ayat 99 tentang bagaimana Allah menumbuhkan berbagai macam tumbuhan hijau yang menghasilkan oksigen dan buah-buahan bagi makhluk hidup.',
+        pancaCinta: ['Cinta kepada Allah dan Rasul-Nya', 'Cinta Ilmu', 'Cinta Lingkungan'],
+        profil: ['Keimanan & Ketakwaan', 'Penalaran Kritis', 'Kreativitas', 'Kemandirian'],
+        kesiapan: 'Siswa usia SD/MI senang belajar melalui eksperimen visual sederhana dan cerita analogi yang mudah dipahami.',
+        karakteristik: 'Konsep sains dasar yang menjelaskan bagaimana tumbuhan memasak makanannya sendiri dan memberikan udara segar bagi manusia.',
+        tp: 'Peserta didik mampu menjelaskan proses fotosintesis pada tumbuhan serta menumbuhkan sikap menyayangi dan merawat tanaman di sekitar.',
+        iktp: [
+          'Menyebutkan bahan-bahan yang dibutuhkan tumbuhan untuk berfotosintesis.',
+          'Menjelaskan hasil fotosintesis (karbohidrat dan oksigen) bagi makhluk hidup.',
+          'Melakukan percobaan sederhana pengamatan gelembung oksigen pada daun.',
+          'Merawat satu tanaman di kelas/rumah dengan penuh kasih sayang.'
+        ],
+        model: 'Discovery Learning & Praktikum Sederhana',
+        kemitraan: 'Orang tua mendampingi anak menyiram tanaman di rumah selama satu minggu.',
+        lingkungan: 'Halaman kelas yang terkena sinar matahari pagi dengan suasana ceria.',
+        digital: 'Animasi proses fotosintesis interaktif.',
+        intiMemahami: 'Guru mengajak siswa menyimak cerita "Dapur Ajaib di Dalam Daun", lalu mengamati percobaan daun segar yang direndam air di bawah sinar matahari.',
+        intiMengaplikasi: 'Siswa menggambar siklus fotosintesis dengan warna-warni kreatif dan menjelaskan peran matahari, air, karbon dioksida, serta klorofil.',
+        intiMerefleksi: 'Siswa diajak menghirup udara segar di luar kelas dan mengucapkan syukur atas oksigen gratis yang diberikan tumbuhan setiap hari.',
+        lkpdTugas: 'Lengkapilah bagan proses fotosintesis berikut, lalu tuliskan 2 cara nyata yang akan kamu lakukan agar tanaman di halaman sekolah dan rumahmu tumbuh subur!'
+      },
+      {
+        id: 'matematika-pecahan',
+        category: 'Sains & Matematika',
+        fase: 'MI / SD - Fase B',
+        kelas: 'Kelas IV / Ganjil',
+        subject: 'Matematika',
+        topic: 'Konsep Pecahan Senilai dan Operasi Pecahan melalui Budaya Berbagi',
+        keywords: ['matematika', 'pecahan', 'senilai', 'pembilang', 'penyebut', 'berbagi'],
+        dalil: 'Prinsip Keadilan dan Ketelitian (QS. Al-Mutaffifin: 1–3) yang mengajarkan ketepatan takaran, keadilan dalam pembagian, dan kejujuran dalam berhitung.',
+        pancaCinta: ['Cinta Ilmu', 'Cinta Diri dan Sesama Manusia'],
+        profil: ['Penalaran Kritis', 'Kreativitas', 'Kolaborasi', 'Kemandirian'],
+        kesiapan: 'Peserta didik sudah menguasai perkalian dan pembagian dasar serta menyukai alat peraga konkret.',
+        karakteristik: 'Konsep abstrak matematika yang menjadi sangat bermakna ketika dipraktikkan melalui pembagian kue/buah secara adil kepada teman.',
+        tp: 'Peserta didik mampu menentukan pecahan senilai dan menyelesaikan masalah sehari-hari berkaitan dengan pecahan dengan teliti dan semangat berbagi.',
+        iktp: [
+          'Menunjukkan bentuk pecahan menggunakan benda konkret atau lipatan kertas.',
+          'Menentukan dua atau lebih pecahan yang senilai dengan tepat.',
+          'Menyelesaikan soal cerita pembagian makanan secara adil dengan konsep pecahan.',
+          'Menunjukkan sikap jujur, teliti, dan senang berbagi dalam kerja kelompok.'
+        ],
+        model: 'Concrete-Pictorial-Abstract (CPA) & Cooperative Learning',
+        kemitraan: 'Kelompok belajar sebaya (tutor teman sebaya) di dalam kelas.',
+        lingkungan: 'Kelas yang suportif di mana siswa tidak takut salah saat mencoba berhitung.',
+        digital: 'Simulasi visual pecahan interaktif (Fraction Bars).',
+        intiMemahami: 'Setiap kelompok mendapatkan kertas origami berbentuk lingkaran/persegi yang diibaratkan "Kue Kasih Sayang" untuk dilipat dan dibagi sama besar menjadi 1/2, 2/4, dan 4/8.',
+        intiMengaplikasi: 'Siswa memecahkan tantangan soal cerita tentang pembagian bingkisan buah kepada tetangga menggunakan konsep pecahan senilai.',
+        intiMerefleksi: 'Siswa berbagi pengalaman tentang bagaimana matematika membantu kita bersikap adil dan tidak merugikan orang lain.',
+        lkpdTugas: 'Warnailah bagian gambar yang menunjukkan pecahan senilai dengan 1/3, lalu selesaikan soal cerita tentang pembagian roti untuk 4 sahabat secara adil!'
+      },
+      {
+        id: 'bindo-puisi',
+        category: 'Bahasa & Sosial',
+        fase: 'MTs / SMP - Fase D',
+        kelas: 'Kelas VIII / Ganjil',
+        subject: 'Bahasa Indonesia',
+        topic: 'Menulis dan Membacakan Puisi Ekspresif Bertema Cinta Sesama & Alam',
+        keywords: ['bahasa indonesia', 'puisi', 'majas', 'diksi', 'sastra', 'ekspresi'],
+        dalil: 'Prinsip Qaulan Karima & Qaulan Layyina (tutur kata yang mulia, lembut, dan menyentuh hati) sebagai wujud keindahan bahasa.',
+        pancaCinta: ['Cinta Ilmu', 'Cinta Diri dan Sesama Manusia', 'Cinta Lingkungan'],
+        profil: ['Kreativitas', 'Komunikasi', 'Keimanan & Ketakwaan', 'Kemandirian'],
+        kesiapan: 'Peserta didik memiliki beragam perasaan dan pengalaman batin yang perlu disalurkan melalui media ekspresi bahasa yang positif.',
+        karakteristik: 'Keterampilan berbahasa produktif yang mengasah kepekaan rasa, pemilihan diksi indah, serta keberanian tampil percaya diri.',
+        tp: 'Peserta didik mampu menulis puisi dengan diksi dan majas yang tepat serta membacakannya dengan penghayatan penuh empati.',
+        iktp: [
+          'Mengidentifikasi unsur pembangun puisi (diksi, imaji, majas, dan amanat).',
+          'Menulis satu karya puisi orisinal bertema kasih sayang keluarga, persahabatan, atau keindahan alam.',
+          'Membacakan puisi dengan intonasi, ekspresi, dan penghayatan yang tepat.',
+          'Memberikan apresiasi positif terhadap karya puisi teman.'
+        ],
+        model: 'Workshop Menulis Kreatif & Apresiasi Sastra',
+        kemitraan: 'Penerbitan antologi puisi kelas atau majalah dinding madrasah.',
+        lingkungan: 'Suasana panggung apresiasi kelas yang hangat, tenang, dan saling menghargai.',
+        digital: 'Instrumen musik lembut pengiring pembacaan puisi.',
+        intiMemahami: 'Peserta didik menyimak pembacaan puisi inspiratif, lalu membedah pilihan kata (diksi) dan majas yang mampu menggetarkan hati pembaca.',
+        intiMengaplikasi: 'Peserta didik melakukan jalan sunyi mengamati sekitar atau mengingat momen berharga, lalu menuangkannya menjadi bait-bait puisi indah.',
+        intiMerefleksi: 'Peserta didik tampil membacakan puisinya diiringi musik lembut, sementara teman lain memberikan kartu apresiasi bintang.',
+        lkpdTugas: 'Tulislah sebuah puisi minimal 3 bait dengan tema "Cinta untuk Ibu/Ayah" atau "Rintih Bumi Sahabat Kita" menggunakan minimal 2 majas (personifikasi/metafora)!'
+      },
+      {
+        id: 'ips-keragaman',
+        category: 'Bahasa & Sosial',
+        fase: 'MTs / SMP - Fase D',
+        kelas: 'Kelas VII / Genap',
+        subject: 'Ilmu Pengetahuan Sosial (IPS)',
+        topic: 'Keberagaman Sosial Budaya Indonesia sebagai Perekat Cinta Tanah Air',
+        keywords: ['ips', 'budaya', 'keragaman', 'toleransi', 'bhineka', 'nusantara', 'tanah air'],
+        dalil: 'QS. Al-Hujurat ayat 13 tentang penciptaan manusia bersuku-suku dan berbangsa-bangsa agar saling mengenal (lita’arafu) dan menghormati.',
+        pancaCinta: ['Cinta Tanah Air', 'Cinta Diri dan Sesama Manusia'],
+        profil: ['Kewargaan', 'Kolaborasi', 'Penalaran Kritis', 'Komunikasi'],
+        kesiapan: 'Peserta didik hidup dalam masyarakat majemuk dan terpapar informasi budaya dari berbagai daerah melalui media sosial.',
+        karakteristik: 'Materi sosial-kultural yang menumbuhkan kebanggaan sebagai bangsa Indonesia sekaligus sikap toleran anti-diskriminasi.',
+        tp: 'Peserta didik mampu menganalisis faktor keberagaman sosial budaya di Indonesia serta menunjukkan sikap toleransi dan cinta tanah air.',
+        iktp: [
+          'Menjelaskan faktor geografis dan historis penyebab keberagaman budaya Indonesia.',
+          'Mengidentifikasi kekayaan adat, bahasa, dan tradisi dari berbagai provinsi.',
+          'Menganalisis cara menyikapi perbedaan budaya dengan semangat persaudaraan.',
+          'Menyajikan pameran mini "Galeri Cinta Nusantara" secara berkelompok.'
+        ],
+        model: 'Jigsaw Cooperative Learning & Gallery Walk',
+        kemitraan: 'Wawancara singkat dengan keluarga/tetangga yang berasal dari daerah berbeda.',
+        lingkungan: 'Kelas yang merayakan perbedaan dengan penuh kegembiraan dan saling menghormati.',
+        digital: 'Peta interaktif budaya Nusantara dan video dokumenter tradisi daerah.',
+        intiMemahami: 'Peserta didik mengamati peta budaya Indonesia dan mendiskusikan pesan QS. Al-Hujurat: 13 tentang indahnya saling mengenal di tengah perbedaan.',
+        intiMengaplikasi: 'Setiap kelompok menjadi "Duta Budaya" satu daerah di Indonesia, menyusun infografis keunikan daerah tersebut, dan melakukan kunjungan galeri (Gallery Walk).',
+        intiMerefleksi: 'Peserta didik menuliskan refleksi tentang bagaimana menjaga persatuan di kelas agar tidak ada ejekan berbasis suku atau logat bahasa.',
+        lkpdTugas: 'Pilihlah 1 provinsi di Indonesia, identifikasi rumah adat, pakaian tradisional, dan nilai kearifan lokalnya, lalu jelaskan bagaimana nilai tersebut mengajarkan kasih sayang!'
+      },
+      {
+        id: 'pjok-kebugaran',
+        category: 'Seni & PJOK',
+        fase: 'MTs / SMP - Fase D',
+        kelas: 'Kelas VII / Ganjil',
+        subject: 'PJOK',
+        topic: 'Aktivitas Kebugaran Jasmani: Mensyukuri dan Mencintai Tubuh Anugerah Tuhan',
+        keywords: ['pjok', 'olahraga', 'kebugaran', 'kesehatan', 'tubuh', 'senam', 'gerak'],
+        dalil: 'Hadis Nabi SAW: "Mukmin yang kuat lebih baik dan lebih dicintai Allah daripada mukmin yang lemah" (HR. Muslim), serta amanah menjaga kesehatan raga.',
+        pancaCinta: ['Cinta kepada Allah dan Rasul-Nya', 'Cinta Diri dan Sesama Manusia'],
+        profil: ['Kesehatan', 'Kemandirian', 'Kolaborasi'],
+        kesiapan: 'Peserta didik memiliki energi gerak tinggi dan membutuhkan aktivitas fisik yang terarah, aman, dan menyenangkan.',
+        karakteristik: 'Pembelajaran praktik lapangan yang menggabungkan latihan fisik terukur dengan kesadaran merawat kesehatan diri.',
+        tp: 'Peserta didik mampu mempraktikkan latihan peningkatan kebugaran jasmani dengan teknik yang benar sebagai wujud syukur dan cinta terhadap diri sendiri.',
+        iktp: [
+          'Menjelaskan komponen kebugaran jasmani (kekuatan, kelenturan, daya tahan).',
+          'Melakukan pemanasan dinamis dan latihan sirkuit kebugaran dengan aman.',
+          'Menunjukkan sportivitas dan saling menyemangati teman selama aktivitas fisik.',
+          'Menyusun jadwal olahraga ringan dan pola tidur sehat di rumah.'
+        ],
+        model: 'Practice Style & Circuit Training Joyful',
+        kemitraan: 'Tim UKS madrasah untuk pemantauan denyut nadi dan kesehatan siswa.',
+        lingkungan: 'Lapangan olahraga yang bersih, aman, dan penuh semangat sportivitas.',
+        digital: 'Stopwatch/timer interval dan musik ritmis pemanasan.',
+        intiMemahami: 'Guru mengajak siswa memeriksa denyut nadi istirahat, lalu berdiskusi singkat mengapa menjaga tubuh tetap bugar adalah bentuk cinta kepada diri sendiri dan amanah Tuhan.',
+        intiMengaplikasi: 'Siswa mengikuti 4 pos latihan kebugaran (push-up/plank modifikasi, lari bolak-balik, lompat tali, peregangan) secara berpasangan sambil saling memberi semangat.',
+        intiMerefleksi: 'Pendinginan bersama dengan teknik pernapasan relaksasi, dilanjutkan refleksi perubahan rasa segar pada tubuh setelah bergerak.',
+        lkpdTugas: 'Catat hasil denyut nadimu sebelum dan sesudah latihan sirkuit hari ini, lalu susun rencana 3 kebiasaan hidup sehat (olahraga, minum air putih, tidur cukup) untuk pekan ini!'
+      }
+    ];
+
+    // Template Umum untuk Topik Kustom yang Tidak Ada di Database Preset
+    function generateCustomTopicData(subject, topic, fase, kelas, selectedPancaCinta, selectedProfil) {
+      const subjLower = subject.toLowerCase();
+      let autoDalil = 'Prinsip Pembelajaran Mendalam dan Nilai Kemanusiaan Universal: Menuntut ilmu dengan niat tulus, rasa ingin tahu yang tinggi, serta menebarkan manfaat bagi sesama dan alam semesta.';
+
+      if (subjLower.includes('akidah') || subjLower.includes('fiqih') || subjLower.includes('pai') || subjLower.includes('quran') || subjLower.includes('ski')) {
+        autoDalil = 'QS. Al-Mujadilah ayat 11 tentang Allah meninggikan derajat orang-orang yang beriman dan berilmu pengetahuan, disertai semangat rahmatan lil ‘alamin.';
+      } else if (subjLower.includes('ipa') || subjLower.includes('biologi') || subjLower.includes('fisika') || subjLower.includes('kimia')) {
+        autoDalil = 'QS. Ali ‘Imran ayat 190–191 tentang tanda-tanda kebesaran Tuhan pada penciptaan langit dan bumi bagi orang-orang yang berpikir mendalam (ulul albab).';
+      } else if (subjLower.includes('matematika')) {
+        autoDalil = 'Prinsip Keteraturan Semesta (QS. Al-Qamar: 49): Segala sesuatu diciptakan dengan ukuran dan perhitungan yang presisi, melatih kejujuran dan ketelitian berpikir.';
+      } else if (subjLower.includes('bahasa')) {
+        autoDalil = 'Prinsip Qaulan Sadida & Qaulan Baligha: Menggunakan bahasa yang benar, santun, jujur, dan menyentuh hati untuk membangun peradaban yang penuh kasih.';
+      } else if (subjLower.includes('ips') || subjLower.includes('pancasila') || subjLower.includes('ppkn')) {
+        autoDalil = 'QS. Al-Hujurat ayat 13 & Nilai Luhur Pancasila: Merawat persaudaraan kemanusiaan, keadilan sosial, dan cinta tanah air di tengah keberagaman.';
+      }
+
+      return {
+        subject,
+        topic,
+        fase,
+        kelas,
+        dalil: autoDalil,
+        pancaCinta: selectedPancaCinta.length ? selectedPancaCinta : ['Cinta Ilmu', 'Cinta Diri dan Sesama Manusia'],
+        profil: selectedProfil.length ? selectedProfil : ['Penalaran Kritis', 'Kolaborasi', 'Komunikasi'],
+        kesiapan: `Peserta didik pada jenjang ${fase} (${kelas}) memiliki potensi rasa ingin tahu yang beragam dan memerlukan pendekatan pembelajaran yang hangat, dialogis, serta menghubungkan konsep "${topic}" dengan pengalaman nyata mereka.`,
+        karakteristik: `Materi "${topic}" pada mata pelajaran ${subject} dirancang untuk membangun pemahaman konseptual yang mendalam sekaligus mengasah kepekaan sikap, empati, dan tanggung jawab moral.`,
+        tp: `Peserta didik mampu memahami, menganalisis, dan mengaplikasikan konsep "${topic}" secara mendalam dengan penuh kesadaran, tanggung jawab, dan semangat kasih sayang dalam kehidupan sehari-hari.`,
+        iktp: [
+          `Menjelaskan konsep dasar dan makna penting dari materi "${topic}" dengan bahasa sendiri.`,
+          `Menganalisis keterkaitan materi "${topic}" dengan nilai-nilai kasih sayang dan pemecahan masalah nyata.`,
+          `Berkolaborasi secara santun dan aktif dalam menyelesaikan proyek/studi kasus kelompok.`,
+          `Merefleksikan manfaat pembelajaran "${topic}" bagi pengembangan diri dan kepedulian terhadap sesama.`
+        ],
+        model: 'Inquiry & Project-Based Deep Learning (Berkesadaran, Bermakna, Menggembirakan)',
+        kemitraan: 'Kolaborasi aktif antar peserta didik dalam kelompok belajar serta pelibatan orang tua/lingkungan sekitar sebagai sumber belajar kontekstual.',
+        lingkungan: 'Suasana kelas yang aman secara psikologis, inklusif, demokratis, penuh apresiasi, dan bebas dari perundungan.',
+        digital: 'Pemanfaatan media presentasi visual, video pembelajaran relevan, dan lembar kerja kolaboratif.',
+        intiMemahami: `Peserta didik mengamati fenomena/studi kasus kontekstual terkait "${topic}", mengajukan pertanyaan kritis, dan berdiskusi dalam kelompok untuk membangun pemahaman konsep secara utuh dan penuh rasa ingin tahu.`,
+        intiMengaplikasi: `Peserta didik menerapkan pemahaman tentang "${topic}" untuk menyelesaikan tantangan atau proyek mini yang bermanfaat bagi lingkungan sekitar dengan mengedepankan kerja sama yang harmonis.`,
+        intiMerefleksi: `Peserta didik melakukan perenungan diri mengenai makna pembelajaran hari ini, menyampaikan perasaan serta pemahaman baru yang diperoleh, dan merumuskan komitmen tindakan positif.`,
+        lkpdTugas: `1. Jelaskan pemahaman utamamu mengenai "${topic}"!\n2. Identifikasi 1 permasalahan nyata di lingkungan sekitarmu yang berkaitan dengan "${topic}", lalu rancang solusi kreatif yang mencerminkan kepedulian dan kasih sayang!\n3. Tuliskan refleksi singkat: Apa manfaat ilmu ini bagi dirimu dan orang lain?`
+      };
+    }
+
+    // =========================================================
+    // FITUR PENCARIAN OTOMATIS (SMART SEARCH)
+    // =========================================================
+    function handleSmartSearch(query) {
+      const q = query.toLowerCase().trim();
+      const resultsBox = document.getElementById('smart-search-results');
+      const clearBtn = document.getElementById('clear-search-btn');
+
+      if (!q) {
+        resultsBox.innerHTML = '';
+        clearBtn.classList.add('hidden');
+        return;
+      }
+
+      clearBtn.classList.remove('hidden');
+
+      const matches = TOPIC_DATABASE.filter((item) => {
+        return (
+          item.topic.toLowerCase().includes(q) ||
+          item.subject.toLowerCase().includes(q) ||
+          item.keywords.some((kw) => kw.includes(q))
+        );
+      });
+
+      if (matches.length === 0) {
+        resultsBox.innerHTML = `
+          <div class="p-3 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-800">
+            <p class="font-semibold">Topik spesifik belum ada di preset cepat.</p>
+            <p class="mt-0.5">Tenang! Ketik langsung topik <strong>"${query}"</strong> pada kolom Topik di bawah lalu klik <strong>Generate RPM Otomatis</strong>.</p>
+          </div>
+        `;
+        return;
+      }
+
+      resultsBox.innerHTML = matches
+        .map(
+          (item) => `
+          <button type="button" onclick="applyPresetTopic('${item.id}')" class="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-emerald-50 border border-slate-200 hover:border-emerald-300 transition cursor-pointer group">
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-md">${item.subject}</span>
+              <span class="text-[10px] text-slate-400 group-hover:text-emerald-700 font-semibold">Pilih & Generate &rarr;</span>
+            </div>
+            <div class="text-xs font-bold text-slate-800 mt-1 line-clamp-2">${item.topic}</div>
+          </button>
+        `
+        )
+        .join('');
+    }
+
+    function clearSmartSearch() {
+      document.getElementById('smart-search-input').value = '';
+      document.getElementById('smart-search-results').innerHTML = '';
+      document.getElementById('clear-search-btn').classList.add('hidden');
+    }
+
+    function applyPresetTopic(presetId) {
+      const preset = TOPIC_DATABASE.find((p) => p.id === presetId);
+      if (!preset) return;
+
+      document.getElementById('input-fase').value = preset.fase;
+      document.getElementById('input-class').value = preset.kelas;
+      document.getElementById('input-subject').value = preset.subject;
+      document.getElementById('input-topic').value = preset.topic;
+
+      // Sync Checkbox Panca Cinta
+      document.querySelectorAll('input[name="panca-cinta"]').forEach((cb) => {
+        cb.checked = preset.pancaCinta.includes(cb.value);
+      });
+
+      // Sync Checkbox Profil Lulusan
+      document.querySelectorAll('input[name="profil-lulusan"]').forEach((cb) => {
+        cb.checked = preset.profil.includes(cb.value);
+      });
+
+      closeBankModal();
+      renderRPMDocument(preset);
+      showToast(`RPM "${preset.subject}" berhasil di-generate otomatis!`);
+    }
+
+    // =========================================================
+    // GENERATOR DOKUMEN RPM UTAMA
+    // =========================================================
+    function generateRPM(event) {
+      if (event) event.preventDefault();
+
+      const school = document.getElementById('input-school').value.trim();
+      const teacher = document.getElementById('input-teacher').value.trim();
+      const duration = document.getElementById('input-duration').value.trim();
+      const fase = document.getElementById('input-fase').value;
+      const kelas = document.getElementById('input-class').value.trim();
+      const subject = document.getElementById('input-subject').value.trim();
+      const topic = document.getElementById('input-topic').value.trim();
+
+      const selectedPancaCinta = Array.from(document.querySelectorAll('input[name="panca-cinta"]:checked')).map((el) => el.value);
+      const selectedProfil = Array.from(document.querySelectorAll('input[name="profil-lulusan"]:checked')).map((el) => el.value);
+
+      // Cek apakah topik cocok dengan salah satu database untuk memperkaya konten
+      const matchedPreset = TOPIC_DATABASE.find(
+        (item) =>
+          item.topic.toLowerCase() === topic.toLowerCase() ||
+          (item.subject.toLowerCase() === subject.toLowerCase() &&
+            item.keywords.some((k) => topic.toLowerCase().includes(k)))
+      );
+
+      let dataObj;
+      if (matchedPreset && matchedPreset.topic.toLowerCase() === topic.toLowerCase()) {
+        dataObj = {
+          ...matchedPreset,
+          school,
+          teacher,
+          duration,
+          fase,
+          kelas,
+          subject,
+          topic,
+          pancaCinta: selectedPancaCinta.length ? selectedPancaCinta : matchedPreset.pancaCinta,
+          profil: selectedProfil.length ? selectedProfil : matchedPreset.profil,
+        };
+      } else {
+        dataObj = {
+          ...generateCustomTopicData(subject, topic, fase, kelas, selectedPancaCinta, selectedProfil),
+          school,
+          teacher,
+          duration,
+        };
+      }
+
+      renderRPMDocument(dataObj);
+      showToast('Dokumen RPM Berbasis Cinta Ver. 3.60 selesai disusun!');
+    }
+
+    function renderRPMDocument(data) {
+      const school = data.school || document.getElementById('input-school').value;
+      const teacher = data.teacher || document.getElementById('input-teacher').value;
+      const duration = data.duration || document.getElementById('input-duration').value;
+
+      const pancaCintaListHTML = data.pancaCinta
+        .map((item) => `<li><strong>${item}:</strong> Diintegrasikan melalui keteladanan sikap, dialog empatik, dan aksi nyata peserta didik.</li>`)
+        .join('');
+
+      const profilBadgesHTML = data.profil.join(', ');
+
+      const iktpListHTML = data.iktp
+        .map((item) => `<li contenteditable="true">${item}</li>`)
+        .join('');
+
+      const paper = document.getElementById('rpm-document-paper');
+      paper.innerHTML = `
+        <!-- KOP DOKUMEN -->
+        <div class="text-center border-b-2 border-emerald-800 pb-4 mb-6">
+          <div class="text-xs font-bold uppercase tracking-widest text-emerald-700 mb-1">Kurikulum Berbasis Cinta (KBC) • Pembelajaran Mendalam (Deep Learning)</div>
+          <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 uppercase tracking-tight" contenteditable="true">RENCANA PEMBELAJARAN MENDALAM (RPM) BERBASIS CINTA</h2>
+          <p class="text-xs text-slate-500 mt-1">Versi 3.60 — Dokumen Perencanaan Pedagogis Terintegrasi</p>
+        </div>
+
+        <!-- A. IDENTITAS MODUL -->
+        <section class="mb-6">
+          <h3 class="text-sm font-extrabold uppercase tracking-wider text-emerald-900 bg-emerald-50 border-l-4 border-emerald-700 px-3 py-1.5 mb-3">A. Identitas Modul Pembelajaran</h3>
+          <table class="rpm-table">
+            <tbody>
+              <tr>
+                <th style="width: 28%;">Satuan Pendidikan</th>
+                <td contenteditable="true">${school}</td>
+              </tr>
+              <tr>
+                <th>Nama Penyusun</th>
+                <td contenteditable="true">${teacher}</td>
+              </tr>
+              <tr>
+                <th>Mata Pelajaran</th>
+                <td contenteditable="true" class="font-bold">${data.subject}</td>
+              </tr>
+              <tr>
+                <th>Jenjang / Fase / Kelas</th>
+                <td contenteditable="true">${data.fase} / ${data.kelas}</td>
+              </tr>
+              <tr>
+                <th>Materi Pokok / Topik</th>
+                <td contenteditable="true" class="font-bold text-emerald-950">${data.topic}</td>
+              </tr>
+              <tr>
+                <th>Alokasi Waktu</th>
+                <td contenteditable="true">${duration}</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- B. IDENTIFIKASI & INTEGRASI KURIKULUM BERBASIS CINTA -->
+        <section class="mb-6">
+          <h3 class="text-sm font-extrabold uppercase tracking-wider text-emerald-900 bg-emerald-50 border-l-4 border-emerald-700 px-3 py-1.5 mb-3">B. Identifikasi Kesiapan & Integrasi Panca Cinta</h3>
+          <table class="rpm-table">
+            <tbody>
+              <tr>
+                <th style="width: 28%;">Kesiapan Peserta Didik</th>
+                <td contenteditable="true">${data.kesiapan}</td>
+              </tr>
+              <tr>
+                <th>Karakteristik Materi</th>
+                <td contenteditable="true">${data.karakteristik}</td>
+              </tr>
+              <tr>
+                <th>Landasan Dalil / Nilai Dasar</th>
+                <td contenteditable="true" class="italic bg-amber-50/40">${data.dalil}</td>
+              </tr>
+              <tr>
+                <th>Dimensi Profil Lulusan</th>
+                <td contenteditable="true" class="font-semibold">${profilBadgesHTML}</td>
+              </tr>
+              <tr>
+                <th>Integrasi Panca Cinta (KBC)</th>
+                <td>
+                  <ul class="list-disc pl-5 space-y-1" contenteditable="true">
+                    ${pancaCintaListHTML}
+                  </ul>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- C. DESAIN PEMBELAJARAN MENDALAM -->
+        <section class="mb-6">
+          <h3 class="text-sm font-extrabold uppercase tracking-wider text-emerald-900 bg-emerald-50 border-l-4 border-emerald-700 px-3 py-1.5 mb-3">C. Desain Pembelajaran Mendalam (Deep Learning)</h3>
+          <table class="rpm-table">
+            <tbody>
+              <tr>
+                <th style="width: 28%;">Tujuan Pembelajaran (TP)</th>
+                <td contenteditable="true" class="font-semibold">${data.tp}</td>
+              </tr>
+              <tr>
+                <th>Indikator Ketercapaian (IKTP)</th>
+                <td>
+                  <ol class="list-decimal pl-5 space-y-1">
+                    ${iktpListHTML}
+                  </ol>
+                </td>
+              </tr>
+              <tr>
+                <th>Prinsip Pembelajaran</th>
+                <td contenteditable="true">
+                  <strong>1. Berkesadaran (Mindful):</strong> Menghadirkan perhatian penuh, ketenangan batin, dan niat tulus saat belajar.<br/>
+                  <strong>2. Bermakna (Meaningful):</strong> Menghubungkan konsep materi dengan pengalaman nyata dan nilai kasih sayang.<br/>
+                  <strong>3. Menggembirakan (Joyful):</strong> Membangun suasana kelas yang ceria, aman, saling menghargai, dan bebas tekanan.
+                </td>
+              </tr>
+              <tr>
+                <th>Praktik Pedagogis & Kemitraan</th>
+                <td contenteditable="true">
+                  <strong>Model:</strong> ${data.model}<br/>
+                  <strong>Kemitraan:</strong> ${data.kemitraan}<br/>
+                  <strong>Lingkungan Belajar:</strong> ${data.lingkungan}<br/>
+                  <strong>Pemanfaatan Digital:</strong> ${data.digital}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- D. LANGKAH-LANGKAH PEMBELAJARAN -->
+        <section class="mb-6">
+          <h3 class="text-sm font-extrabold uppercase tracking-wider text-emerald-900 bg-emerald-50 border-l-4 border-emerald-700 px-3 py-1.5 mb-3">D. Langkah-Langkah Pembelajaran Berbasis Cinta</h3>
+          <table class="rpm-table">
+            <thead>
+              <tr>
+                <th style="width: 20%;">Tahapan</th>
+                <th style="width: 58%;">Deskripsi Kegiatan Pembelajaran</th>
+                <th style="width: 22%;">Prinsip & Muatan Cinta</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="font-bold">1. Pendahuluan<br/><span class="text-xs font-normal text-slate-500">(±15 Menit)</span></td>
+                <td contenteditable="true">
+                  • Guru menyapa peserta didik dengan senyum tulus, salam hangat, dan menanyakan kabar perasaan hari ini (<em>emotional check-in</em>).<br/>
+                  • Berdoa bersama dengan khusyuk dipimpin oleh salah satu peserta didik.<br/>
+                  • <strong>Apersepsi Berkesadaran:</strong> Guru mengajak siswa melakukan jeda hening sejenak dan mengajukan pertanyaan pemantik yang menyentuh hati terkait <em>"${data.topic}"</em>.<br/>
+                  • Menyampaikan tujuan pembelajaran dan kesepakatan kelas yang penuh kasih sayang.
+                </td>
+                <td contenteditable="true" class="text-xs">
+                  • <em>Berkesadaran (Mindful)</em><br/>
+                  • Cinta Allah & Rasul-Nya<br/>
+                  • Cinta Diri & Sesama
+                </td>
+              </tr>
+              <tr>
+                <td class="font-bold">2. Kegiatan Inti<br/><span class="text-xs font-normal text-slate-500">(±50 Menit)</span></td>
+                <td contenteditable="true">
+                  <p class="mb-2"><strong>Tahap I — Memahami (Understanding):</strong><br/>${data.intiMemahami}</p>
+                  <p class="mb-2"><strong>Tahap II — Mengaplikasi (Applying):</strong><br/>${data.intiMengaplikasi}</p>
+                  <p><strong>Tahap III — Merefleksi (Reflecting):</strong><br/>${data.intiMerefleksi}</p>
+                </td>
+                <td contenteditable="true" class="text-xs">
+                  • <em>Bermakna (Meaningful)</em><br/>
+                  • <em>Menggembirakan (Joyful)</em><br/>
+                  • ${data.pancaCinta.join('<br/>• ')}
+                </td>
+              </tr>
+              <tr>
+                <td class="font-bold">3. Penutup<br/><span class="text-xs font-normal text-slate-500">(±15 Menit)</span></td>
+                <td contenteditable="true">
+                  • Peserta didik bersama guru menyimpulkan intisari pembelajaran hari ini.<br/>
+                  • Guru memberikan apresiasi dan penguatan positif atas partisipasi serta kebaikan sikap seluruh siswa selama proses belajar.<br/>
+                  • Menyampaikan tindak lanjut aksi nyata di rumah/lingkungan.<br/>
+                  • Menutup pembelajaran dengan doa dan salam penuh kehangatan.
+                </td>
+                <td contenteditable="true" class="text-xs">
+                  • <em>Berkesadaran & Apresiatif</em><br/>
+                  • Penguatan Karakter Cinta
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- E. ASESMEN & RUBRIK PENILAIAN -->
+        <section class="mb-6 page-break-inside-avoid">
+          <h3 class="text-sm font-extrabold uppercase tracking-wider text-emerald-900 bg-emerald-50 border-l-4 border-emerald-700 px-3 py-1.5 mb-3">E. Asesmen Pembelajaran & Rubrik Penilaian</h3>
+          <div class="text-xs sm:text-sm space-y-1.5 mb-3" contenteditable="true">
+            <p><strong>1. Asesmen Awal (Diagnostik):</strong> Tanya jawab lisan pemantik dan pemetaan kesiapan emosional/pengetahuan awal siswa.</p>
+            <p><strong>2. Asesmen Formatif (Proses):</strong> Observasi sikap empati, kolaborasi kelompok, santun berkomunikasi, dan keaktifan bertanya.</p>
+            <p><strong>3. Asesmen Sumatif (Produk/Kinerja):</strong> Penilaian hasil Lembar Kerja Peserta Didik (LKPD) dan aksi nyata penerapan nilai cinta.</p>
+          </div>
+
+          <table class="rpm-table text-xs">
+            <thead>
+              <tr>
+                <th style="width: 20%;">Kriteria Penilaian</th>
+                <th style="width: 20%;">Perlu Bimbingan (1)</th>
+                <th style="width: 20%;">Cukup (2)</th>
+                <th style="width: 20%;">Baik (3)</th>
+                <th style="width: 20%;">Sangat Baik (4)</th>
+              </tr>
+            </thead>
+            <tbody contenteditable="true">
+              <tr>
+                <td class="font-bold">Kedalaman Pemahaman Konsep</td>
+                <td>Belum mampu menjelaskan konsep dasar materi secara mandiri.</td>
+                <td>Mampu menjelaskan konsep dasar namun masih bersifat hafalan permukaan.</td>
+                <td>Mampu menjelaskan dan menganalisis materi dengan bahasa yang runtut.</td>
+                <td>Sangat mendalam dalam menganalisis konsep serta mampu mengaitkannya dengan kehidupan nyata.</td>
+              </tr>
+              <tr>
+                <td class="font-bold">Internalisasi Nilai Panca Cinta</td>
+                <td>Masih perlu diingatkan untuk bersikap santun dan peduli saat berinteraksi.</td>
+                <td>Menunjukkan sikap sopan namun belum konsisten dalam kerja kelompok.</td>
+                <td>Menunjukkan empati, saling menghargai, dan tanggung jawab selama belajar.</td>
+                <td>Menjadi teladan kasih sayang, aktif membantu teman, dan menunjukkan komitmen aksi nyata yang tulus.</td>
+              </tr>
+              <tr>
+                <td class="font-bold">Kualitas Karya & Refleksi (LKPD)</td>
+                <td>Tugas belum selesai dan refleksi masih sangat singkat.</td>
+                <td>Tugas selesai sebagian dengan refleksi sederhana.</td>
+                <td>Tugas selesai dengan baik, rapi, dan memuat refleksi yang jujur.</td>
+                <td>Karya sangat kreatif, solutif, reflektif, dan berdampak positif bagi sekitar.</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- F. LEMBAR KERJA PESERTA DIDIK (LKPD) -->
+        <section class="mb-8 page-break-inside-avoid">
+          <h3 class="text-sm font-extrabold uppercase tracking-wider text-emerald-900 bg-emerald-50 border-l-4 border-emerald-700 px-3 py-1.5 mb-3">F. Lembar Kerja Peserta Didik (LKPD) Kontekstual</h3>
+          <div class="border border-slate-300 rounded-xl p-4 bg-slate-50/50 text-xs sm:text-sm space-y-2" contenteditable="true">
+            <div class="flex flex-wrap justify-between border-b border-slate-200 pb-2 text-xs text-slate-600">
+              <span><strong>Nama / Kelompok:</strong> ........................................</span>
+              <span><strong>Kelas:</strong> ${data.kelas}</span>
+              <span><strong>Tanggal:</strong> ..........................</span>
+            </div>
+            <p class="font-bold text-emerald-900 pt-1">Instruksi Aktivitas Eksplorasi & Aksi Cinta:</p>
+            <div class="whitespace-pre-line leading-relaxed">${data.lkpdTugas}</div>
+          </div>
+        </section>
+
+        <!-- BLOK TANDA TANGAN PENGESAHAN -->
+        <section class="grid grid-cols-2 gap-8 pt-4 text-xs sm:text-sm page-break-inside-avoid" contenteditable="true">
+          <div class="text-center">
+            <p>Mengetahui,</p>
+            <p class="font-bold">Kepala Madrasah / Sekolah</p>
+            <div class="h-16"></div>
+            <p class="font-bold underline">....................................................</p>
+            <p class="text-xs text-slate-500">NIP. ............................................</p>
+          </div>
+          <div class="text-center">
+            <p>...................., .......................... 2026</p>
+            <p class="font-bold">Guru Mata Pelajaran</p>
+            <div class="h-16"></div>
+            <p class="font-bold underline">${teacher}</p>
+            <p class="text-xs text-slate-500">NIP. ............................................</p>
+          </div>
+        </section>
+      `;
+    }
+
+    // =========================================================
+    // MODAL BANK TOPIK
+    // =========================================================
+    function openBankModal() {
+      document.getElementById('bank-modal').classList.remove('hidden');
+      renderBankModalList();
+    }
+
+    function closeBankModal() {
+      document.getElementById('bank-modal').classList.add('hidden');
+    }
+
+    function renderBankModalList() {
+      const search = (document.getElementById('modal-bank-search').value || '').toLowerCase().trim();
+      const cat = document.getElementById('modal-bank-category').value;
+
+      const filtered = TOPIC_DATABASE.filter((item) => {
+        const matchCat = cat === 'Semua' || item.category === cat;
+        const matchSearch =
+          !search ||
+          item.topic.toLowerCase().includes(search) ||
+          item.subject.toLowerCase().includes(search) ||
+          item.keywords.some((k) => k.includes(search));
+        return matchCat && matchSearch;
+      });
+
+      const listEl = document.getElementById('bank-modal-list');
+      if (filtered.length === 0) {
+        listEl.innerHTML = `<div class="col-span-full text-center py-8 text-xs text-slate-500">Tidak ada preset topik yang cocok.</div>`;
+        return;
+      }
+
+      listEl.innerHTML = filtered
+        .map(
+          (item) => `
+          <div onclick="applyPresetTopic('${item.id}')" class="p-4 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50/40 transition cursor-pointer flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between gap-2 mb-1.5">
+                <span class="px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800 text-[10px] font-bold">${item.subject}</span>
+                <span class="text-[10px] text-slate-500">${item.kelas}</span>
+              </div>
+              <h4 class="text-xs sm:text-sm font-bold text-slate-900">${item.topic}</h4>
+              <p class="text-[11px] text-slate-500 mt-1 line-clamp-2">${item.tp}</p>
+            </div>
+            <div class="mt-3 pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] font-semibold text-emerald-700">
+              <span>${item.pancaCinta.join(' • ')}</span>
+              <span>Gunakan &rarr;</span>
+            </div>
+          </div>
+        `
+        )
+        .join('');
+    }
+
+    // =========================================================
+    // EKSPOR KE WORD (.DOC) & SALIN TEKS
+    // =========================================================
+    function exportToWord() {
+      const content = document.getElementById('rpm-document-paper').innerHTML;
+      const subject = document.getElementById('input-subject').value || 'RPM';
+      const topic = document.getElementById('input-topic').value || 'Berbasis_Cinta';
+
+      const preHtml = `
+        <html xmlns:o='urn:schemas-microsoft-com:office:office'
+              xmlns:w='urn:schemas-microsoft-com:office:word'
+              xmlns='http://www.w3.org/TR/REC-html40'>
+        <head><meta charset='utf-8'><title>RPM Berbasis Cinta</title>
+        <style>
+          body { font-family: 'Calibri', 'Arial', sans-serif; font-size: 11pt; line-height: 1.4; color: #111; }
+          h2 { text-align: center; font-size: 14pt; margin-bottom: 4px; }
+          h3 { background-color: #ecfdf5; padding: 6px 10px; border-left: 4px solid #047857; font-size: 11pt; margin-top: 14px; }
+          table { width: 100%; border-collapse: collapse; margin-bottom: 12px; }
+          th, td { border: 1px solid #94a3b8; padding: 6px 8px; vertical-align: top; text-align: left; font-size: 10pt; }
+          th { background-color: #ecfdf5; font-weight: bold; }
+        </style>
+        </head><body>
+      `;
+      const postHtml = '</body></html>';
+      const fullHtml = preHtml + content + postHtml;
+
+      const blob = new Blob(['\ufeff', fullHtml], { type: 'application/msword' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      const safeFilename = `RPM_Cinta_${subject}_${topic}`.replace(/[^a-z0-9]/gi, '_').slice(0, 50);
+
+      link.href = url;
+      link.download = `${safeFilename}.doc`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
+      showToast('File Microsoft Word (.doc) berhasil diunduh!');
+    }
+
+    function copyDocumentText() {
+      const paper = document.getElementById('rpm-document-paper');
+      const range = document.createRange();
+      range.selectNode(paper);
+      window.getSelection().removeAllRanges();
+      window.getSelection().addRange(range);
+      try {
+        document.execCommand('copy');
+        showToast('Seluruh isi dokumen RPM berhasil disalin ke clipboard!');
+      } catch (err) {
+        showToast('Gagal menyalin teks otomatis.', 'error');
+      }
+      window.getSelection().removeAllRanges();
+    }
+
+    // Notifikasi Toast
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      const bgClass = type === 'error' ? 'bg-rose-700 border-rose-300' : 'bg-emerald-950 border-amber-400';
+
+      toast.className = `pointer-events-auto flex items-center gap-2.5 px-4 py-3 rounded-xl shadow-lg border-l-4 text-white text-xs sm:text-sm font-medium transition-all duration-300 ${bgClass}`;
+      toast.innerHTML = `<i class="fa-solid fa-circle-check text-amber-400"></i><span>${message}</span>`;
+
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(15px)';
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+
+    // Inisialisasi Dokumen Pertama Kali Saat Halaman Dibuka
+    window.addEventListener('DOMContentLoaded', () => {
+      renderRPMDocument(TOPIC_DATABASE[0]);
+    });
+  </script>
+</body>
+</html>
